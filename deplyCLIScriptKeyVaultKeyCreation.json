@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "identity": {
+      "type": "string"
+    },
+    "name":{
+      "type": "string",
+      "defaultValue": "\\\"John Dole\\\""
+    },
+    "keyVaultName":{
+      "type": "string",
+      "defaultValue": "\\\"gh2149-rg\\\""
+    },
+    "keyName":{
+      "type": "string",
+      "defaultValue": "\\\"des1Key\\\""
+    },
+    "utcValue": {
+      "type": "string",
+      "defaultValue": "[utcNow()]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2019-10-01-preview",
+      "name": "CreateKeyVaultKey",
+      "location": "West US",
+      "kind": "AzureCLI",
+      "identity": {
+        "type": "userAssigned",
+        "userAssignedIdentities": {
+          "[parameters('identity')]": {
+          }
+        }
+      },
+      "properties": {
+        "forceUpdateTag": "[parameters('utcValue')]",
+        "azPowerShellVersion": "3.0",
+        "scriptContent": "
+          $keyVaultName=$1
+          $keyName=$2
+          echo 'keyVaultName: $keyVaultName'
+          echo 'keyName: $keyName'
+          az login --identity
+          az keyvault key create --vault-name $keyVaultName -n $keyName --protection software
+          $keyVaultKeyUrl=$(az keyvault key show --vault-name $keyVaultName --name $keyName --query [key.kid] -o tsv)
+          $DeploymentScriptOutputs = @{}
+          $DeploymentScriptOutputs['keyVaultUrl'] = $keyVaultKeyUrl
+        ",
+        "arguments": "[concat('-keyVaultName', ' ', parameters('keyVaultName'), ' ', '-keyName', ' ', parameters('keyName'))]",
+        "timeout": "PT1H",
+        "cleanupPreference": "OnSuccess",
+        "retentionInterval": "P1D"
+      }
+    }
+  ],
+  "outputs": {
+    "result": {
+      "value": "[reference('CreateKeyVaultKey').outputs.keyVaultUrl]",
+      "type": "string"
+    }
+  }
+}
