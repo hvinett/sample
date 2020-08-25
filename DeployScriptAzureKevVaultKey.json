@@ -15,7 +15,7 @@
     },
     "keyName":{
       "type": "string",
-      "defaultValue": "\\\"desKey\\\""
+      "defaultValue": "\\\"des1Key\\\""
     },
     "utcValue": {
       "type": "string",
@@ -40,9 +40,15 @@
         "forceUpdateTag": "[parameters('utcValue')]",
         "azPowerShellVersion": "3.0",
         "scriptContent": "
+          param (
+            [string]$keyVaultName,
+            [string]$keyName
+          )
+
+          write-Output "keyVaultName: $keyVaultName"
+          write-Output "keyName: $keyName"
           az keyvault key create --vault-name $keyVaultName -n $keyName --protection software
           $keyVaultKeyUrl=$(az keyvault key show --vault-name $keyVaultName --name $keyName --query [key.kid] -o tsv)
-          Write-Output $keyVaultKeyUrl
           $DeploymentScriptOutputs = @{}
           $DeploymentScriptOutputs['keyVaultUrl'] = $keyVaultKeyUrl
         ",
