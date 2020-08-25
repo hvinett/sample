@@ -29,6 +29,7 @@
       "name": "CreateKeyVaultKey",
       "location": "West US",
       "kind": "AzureCLI",
+      "version": "latest"
       "identity": {
         "type": "userAssigned",
         "userAssignedIdentities": {
