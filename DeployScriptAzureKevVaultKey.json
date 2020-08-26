@@ -5,10 +5,6 @@
     "identity": {
       "type": "string"
     },
-    "name":{
-      "type": "string",
-      "defaultValue": "\\\"John Dole\\\""
-    },
     "keyVaultName":{
       "type": "string",
       "defaultValue": "\\\"gh2149-rg\\\""
@@ -44,13 +40,12 @@
             [string]$keyVaultName,
             [string]$keyName
           )
-
+          
           write-Output 'keyVaultName: $keyVaultName'
           write-Output 'keyName: $keyName'
-          az keyvault key create --vault-name $keyVaultName -n $keyName --protection software
-          $keyVaultKeyUrl=$(az keyvault key show --vault-name $keyVaultName --name $keyName --query [key.kid] -o tsv)
+          $key = Add-AzKeyVaultKey -VaultName "gh2149-keyvault"  -name "desKey" -Destination 'Software'
           $DeploymentScriptOutputs = @{}
-          $DeploymentScriptOutputs['keyVaultUrl'] = $keyVaultKeyUrl
+          $DeploymentScriptOutputs['keyVaultUrl'] = $key.Id
         ",
         "arguments": "[concat('-keyVaultName', ' ', parameters('keyVaultName'), ' ', '-keyName', ' ', parameters('keyName'))]",
         "timeout": "PT1H",
