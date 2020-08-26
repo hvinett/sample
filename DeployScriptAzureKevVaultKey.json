@@ -11,7 +11,7 @@
     },
     "keyName":{
       "type": "string",
-      "defaultValue": "\\\"des1Key\\\""
+      "defaultValue": "\\\"des2Key\\\""
     },
     "utcValue": {
       "type": "string",
@@ -44,6 +44,7 @@
           write-Output 'keyVaultName: $keyVaultName'
           write-Output 'keyName: $keyName'
           $key = Add-AzKeyVaultKey -VaultName 'gh2149-keyvault'  -name 'desKey' -Destination 'Software'
+          write-Output $key.Id
           $DeploymentScriptOutputs = @{}
           $DeploymentScriptOutputs['keyVaultUrl'] = $key.Id
         ",
