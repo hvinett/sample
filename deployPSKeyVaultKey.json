@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "identity": {
+      "type": "string"
+    },
+    "keyVaultName":{
+      "type": "string",
+      "defaultValue": "\\\"gh2149-rg\\\""
+    },
+    "keyName":{
+      "type": "string",
+      "defaultValue": "\\\"des2Key\\\""
+    },
+    "utcValue": {
+      "type": "string",
+      "defaultValue": "[utcNow()]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2019-10-01-preview",
+      "name": "CreateKeyVaultKey",
+      "location": "West US",
+      "kind": "AzurePowerShell",
+      "identity": {
+        "type": "userAssigned",
+        "userAssignedIdentities": {
+          "[parameters('identity')]": {
+          }
+        }
+      },
+      "properties": {
+        "forceUpdateTag": "[parameters('utcValue')]",
+        "azPowerShellVersion": "3.0",
+        "scriptContent": "
+          param (
+            [string]$keyVaultName,
+            [string]$keyName
+          )
+          
+          write-Output keyVaultName: $keyVaultName
+          write-Output keyName: $keyName
+          $key = Add-AzKeyVaultKey -VaultName $keyVaultName  -name $keyName -Destination 'Software'
+          write-Output $keyName
+          $DeploymentScriptOutputs = @{}
+          $DeploymentScriptOutputs['keyVaultUrl'] = $keyName
+        ",
+        "arguments": "[concat('-keyVaultName', ' ', parameters('keyVaultName'), ' ', '-keyName', ' ', parameters('keyName'))]",
+        "timeout": "PT1H",
+        "cleanupPreference": "OnSuccess",
+        "retentionInterval": "P1D"
+      }
+    }
+  ],
+  "outputs": {
+    "result": {
+      "value": "[reference('CreateKeyVaultKey').outputs.keyVaultUrl]",
+      "type": "string"
+    }
+  }
+}
