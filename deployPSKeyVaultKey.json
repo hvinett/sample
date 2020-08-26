@@ -29,7 +29,8 @@
       "identity": {
         "type": "userAssigned",
         "userAssignedIdentities": {
-          "/subscriptions/9e01c1b0-6b2c-4deb-81e1-80aa08a9f985/resourceGroups/GHPI-TestInfra-Resources/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ghpiEv2_AzFn_test_identity"
+          "[parameters('identity')]": {
+          }
         }
       },
       "properties": {
