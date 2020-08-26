@@ -5,10 +5,6 @@
     "identity": {
       "type": "string"
     },
-    "name":{
-      "type": "string",
-      "defaultValue": "\\\"John Dole\\\""
-    },
     "keyVaultName":{
       "type": "string",
       "defaultValue": "\\\"gh2149-rg\\\""
