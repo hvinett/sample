@@ -1,0 +1,52 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {},
+  "resources": [
+    {
+      "apiVersion": "2019-07-01",
+      "type": "Microsoft.Compute/diskEncryptionSets",
+      "name": "primaryDiskEncryptionSetName2",
+      "location": "[resourceGroup().location]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "activeKey": {
+          "sourceVault": {
+            "id": "/subscriptions/32f750d1-2a53-4792-a857-b5a0ee599f96/resourceGroups/gh2149-rg/providers/Microsoft.KeyVault/vaults/gh2149-keyvault"
+          },
+          "keyUrl": "https://gh2149-keyvault.vault.azure.net/keys/primarydeskey/b08fadda23e14236a4b37b1eaf975b39"
+        }
+      }
+    },
+	
+	{
+      "type": "Microsoft.KeyVault/vaults/accessPolicies",
+      "name": "[concat('gh2149-keyvault', '/add')]",
+      "apiVersion": "2019-09-01",
+      "dependsOn": [
+        
+      ],
+      "properties": {
+        "accessPolicies": [
+          {
+            "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+            "objectId": "13d23176-f086-499f-ae15-f5ed94ac9a32",
+            "permissions": {
+              "keys": [
+                "Get",
+                "WrapKey",
+                "UnwrapKey"
+              ],
+			 
+              "secrets": [],
+              "certificates": []
+            }
+          }
+        ]
+      }
+    }
+  ]
+  
+}
