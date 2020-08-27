@@ -1,0 +1,82 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "utcValue": {
+            "defaultValue": "[utcNow()]",
+            "type": "String"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2019-10-01-preview",
+            "name": "CreateKeyVaultKey",
+            "location": "West US",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "/subscriptions/9e01c1b0-6b2c-4deb-81e1-80aa08a9f985/resourceGroups/GHPI-TestInfra-Resources/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ghpiEv2_AzFn_test_identity": {}
+                }
+            },
+            "properties": {
+                "forceUpdateTag": "[parameters('utcValue')]",
+                "azPowerShellVersion": "3.0",
+                "primaryScriptUri": "https://raw.githubusercontent.com/hvinett/sample/master/createKeyVaultKey.ps1",
+                "arguments": "[concat('-keyVaultName', ' ', 'gh2149-keyvault', ' ', '-keyName', ' ', 'primarydeskey')]",
+                "timeout": "PT1H",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+            }
+        },
+        {
+            "type": "Microsoft.Compute/diskEncryptionSets",
+            "apiVersion": "2019-07-01",
+            "name": "primaryDiskEncryptionSetName2",
+            "location": "[resourceGroup().location]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "activeKey": {
+                    "sourceVault": {
+                        "id": "/subscriptions/32f750d1-2a53-4792-a857-b5a0ee599f96/resourceGroups/gh2149-rg/providers/Microsoft.KeyVault/vaults/gh2149-keyvault"
+                    },
+                    "keyUrl": "[reference('CreateKeyVaultKey').outputs.keyVaultKeyUrl]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/accessPolicies",
+            "apiVersion": "2019-09-01",
+            "name": "[concat('gh2149-keyvault', '/add')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/diskEncryptionSets', 'primaryDiskEncryptionSetName2')]"
+            ],
+            "properties": {
+                "accessPolicies": [
+                    {
+                        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+                        "objectId": "[reference(resourceId('Microsoft.Compute/diskEncryptionSets', 'primaryDiskEncryptionSetName2'), '2020-06-30', 'full').identity.principalId]",
+                        "permissions": {
+                            "keys": [
+                                "Get",
+                                "WrapKey",
+                                "UnwrapKey"
+                            ],
+                            "secrets": [],
+                            "certificates": []
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "keyVaultKeyUrl": {
+            "type": "String",
+            "value": "[reference('CreateKeyVaultKey').outputs.keyVaultKeyUrl]"
+        }
+    }
+}
