@@ -28,27 +28,15 @@
       "identity": {
         "type": "userAssigned",
         "userAssignedIdentities": {
-          "[parameters('identity')]": {
+          "/subscriptions/b0e5bf7f-9052-4e14-8523-a5a455f09e5d/resourceGroups/AzureFunctionControlPlaneCUS/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ghpiEv2ProdUseridentity": {}
           }
         }
       },
       "properties": {
         "forceUpdateTag": "[parameters('utcValue')]",
         "azPowerShellVersion": "3.0",
-        "scriptContent": "
-          param (
-            [string]$keyVaultName,
-            [string]$keyName
-          )
-          
-          write-Output 'keyVaultName: $keyVaultName'
-          write-Output 'keyName: $keyName'
-          $key = Add-AzKeyVaultKey -VaultName $keyVaultName  -name $keyName -Destination 'Software'
-          write-Output $key.Id
-          $DeploymentScriptOutputs = @{}
-          $DeploymentScriptOutputs['keyVaultUrl'] = $key.Id
-        ",
-        "arguments": "[concat('-keyVaultName', ' ', parameters('keyVaultName'), ' ', '-keyName', ' ', parameters('keyName'))]",
+        "primaryScriptUri": "https://raw.githubusercontent.com/hvinett/sample/master/createKeyVaultKey.ps1",
+        "arguments": "[concat('-keyVaultName', ' ', 'gh2149-keyvault', ' ', '-keyName', ' ', 'primarydeskey')]",
         "timeout": "PT1H",
         "cleanupPreference": "OnSuccess",
         "retentionInterval": "P1D"
