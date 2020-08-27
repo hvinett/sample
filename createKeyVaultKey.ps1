@@ -1,5 +1,11 @@
-param([string] $keyVaultName)
-param([string] $keyName)
-az keyvault key create --vault-name $keyVaultName -n $keyName --protection software
-$keyVaultKeyUrl=$(az keyvault key show --vault-name $keyVaultName --name $keyName --query [key.kid] -o tsv)
-Write-Output $keyVaultKeyUrl
+param (
+     [string] $keyVaultName,
+     [string] $keyName
+)
+                  
+write-Output keyVaultName: $keyVaultName
+write-Output keyName: $keyName
+$key = Add-AzKeyVaultKey -VaultName $keyVaultName  -name $keyName -Destination 'Software'
+write-Output $keyName
+$DeploymentScriptOutputs = @{}
+$DeploymentScriptOutputs['keyVaultKeyUrl'] = $key.Id
