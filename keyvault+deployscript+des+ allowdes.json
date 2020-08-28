@@ -5,14 +5,31 @@
         "utcValue": {
             "defaultValue": "[utcNow()]",
             "type": "String"
-        }
+        },
+        "primaryDeskv": {
+            "defaultValue": "primarydeskv6",
+            "type": "String"
+        },
+		"primaryDesName": {
+			"defaultValue": "primaryDiskEncryptionSetName2",
+            "type": "String"
+		},
+		"region": {
+			"defaultValue": "westindia",
+            "type": "String"
+		},
+		"primarayDesName":
+		{
+			"defaultValue": "primarydes",
+            "type": "String"
+		}
     },
     "resources": [
-		 {
+        {
             "type": "Microsoft.KeyVault/vaults",
             "apiVersion": "2016-10-01",
-            "name": "primaryDesKvName6",
-            "location": "westindia",
+            "name": "[parameters('primaryDeskv')]",
+            "location": "[parameters('region')]",
             "properties": {
                 "sku": {
                     "family": "A",
@@ -64,159 +81,13 @@
                                 "DeleteIssuers"
                             ]
                         }
-                    },
-                    {
-                        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-                        "objectId": "88276809-59ef-4f22-b3e7-f185a63a8d56",
-                        "permissions": {
-                            "keys": [
-                                "Get",
-                                "List",
-                                "Update",
-                                "Create",
-                                "Import",
-                                "Delete",
-                                "Recover",
-                                "Backup",
-                                "Restore"
-                            ],
-                            "secrets": [
-                                "Get",
-                                "List",
-                                "Set",
-                                "Delete",
-                                "Recover",
-                                "Backup",
-                                "Restore"
-                            ],
-                            "certificates": [
-                                "Get",
-                                "List",
-                                "Update",
-                                "Create",
-                                "Import",
-                                "Delete",
-                                "Recover",
-                                "Backup",
-                                "Restore",
-                                "ManageContacts",
-                                "ManageIssuers",
-                                "GetIssuers",
-                                "ListIssuers",
-                                "SetIssuers",
-                                "DeleteIssuers"
-                            ]
-                        }
-                    },
-                    {
-                        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-                        "objectId": "0353b327-cfd1-4453-a588-364410769067",
-                        "permissions": {
-                            "keys": [
-                                "Get",
-                                "List",
-                                "Update",
-                                "Create",
-                                "Import",
-                                "Delete",
-                                "Recover",
-                                "Backup",
-                                "Restore"
-                            ],
-                            "secrets": [
-                                "Get",
-                                "List",
-                                "Set",
-                                "Delete",
-                                "Recover",
-                                "Backup",
-                                "Restore"
-                            ],
-                            "certificates": [
-                                "Get",
-                                "List",
-                                "Update",
-                                "Create",
-                                "Import",
-                                "Delete",
-                                "Recover",
-                                "Backup",
-                                "Restore",
-                                "ManageContacts",
-                                "ManageIssuers",
-                                "GetIssuers",
-                                "ListIssuers",
-                                "SetIssuers",
-                                "DeleteIssuers"
-                            ]
-                        }
-                    },
-                    {
-                        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-                        "objectId": "6e95cc29-5b5c-4e13-8235-836ffbadfa1b",
-                        "permissions": {
-                            "secrets": [
-                                "Get"
-                            ],
-                            "keys": [],
-                            "certificates": []
-                        }
-                    },
-                    {
-                        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-                        "objectId": "d3795f2a-d8d6-4968-95b2-3a6670959214",
-                        "permissions": {
-                            "secrets": [
-                                "Get",
-                                "List",
-                                "Set"
-                            ],
-                            "keys": [],
-                            "certificates": []
-                        }
-                    },
-                    {
-                        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-                        "objectId": "8de60aa2-b18c-44a0-aadf-3eaae3acfd76",
-                        "permissions": {
-                            "keys": [
-                                "get",
-                                "wrapkey",
-                                "unwrapkey"
-                            ]
-                        }
-                    },
-                    {
-                        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-                        "objectId": "e9c80630-e035-416a-b0b6-af134a345043",
-                        "permissions": {
-                            "keys": [
-                                "Get",
-                                "WrapKey",
-                                "UnwrapKey"
-                            ],
-                            "secrets": [],
-                            "certificates": []
-                        }
-                    },
-                    {
-                        "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-                        "objectId": "3b11c1bd-ff62-410a-bd4b-1f6fa7e84e61",
-                        "permissions": {
-                            "keys": [
-                                "get",
-                                "wrapkey",
-                                "unwrapkey"
-                            ],
-                            "secrets": [],
-                            "certificates": []
-                        }
                     }
+                    
                 ],
                 "enabledForDeployment": true,
                 "enabledForDiskEncryption": false,
                 "enabledForTemplateDeployment": true,
-				"enablePurgeProtection": true,
+                "enablePurgeProtection": true,
                 "enableSoftDelete": true
             }
         },
@@ -224,12 +95,11 @@
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2019-10-01-preview",
             "name": "CreateKeyVaultKey",
-			
             "location": "West US",
-            "kind": "AzurePowerShell",
-			"dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', 'primaryDesKvName6')]"
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('primaryDeskv'))]"
             ],
+            "kind": "AzurePowerShell",
             "identity": {
                 "type": "userAssigned",
                 "userAssignedIdentities": {
@@ -240,7 +110,7 @@
                 "forceUpdateTag": "[parameters('utcValue')]",
                 "azPowerShellVersion": "3.0",
                 "primaryScriptUri": "https://raw.githubusercontent.com/hvinett/sample/master/createKeyVaultKey.ps1",
-                "arguments": "[concat('-keyVaultName', ' ', 'primaryDesKvName6', ' ', '-keyName', ' ', 'primarydeskey')]",
+                "arguments": "[concat('-keyVaultName', ' ', parameters('primaryDeskv'), ' ', '-keyName', ' ', 'primarydeskey')]",
                 "timeout": "PT1H",
                 "cleanupPreference": "OnSuccess",
                 "retentionInterval": "P1D"
@@ -249,15 +119,15 @@
         {
             "type": "Microsoft.Compute/diskEncryptionSets",
             "apiVersion": "2019-07-01",
-            "name": "primaryDiskEncryptionSetName2",
-            "location": "[resourceGroup().location]",
+            "name": "[parameters('primarayDesName')]",
+            "location": "[parameters('region')]",
             "identity": {
                 "type": "SystemAssigned"
             },
             "properties": {
                 "activeKey": {
                     "sourceVault": {
-                        "id": "/subscriptions/32f750d1-2a53-4792-a857-b5a0ee599f96/resourceGroups/gh2149-rg/providers/Microsoft.KeyVault/vaults/primaryDesKvName6"
+                        "id": "[concat('/subscriptions/32f750d1-2a53-4792-a857-b5a0ee599f96/resourceGroups/gh2149-rg/providers/Microsoft.KeyVault/vaults/', parameters('primaryDeskv'))]"
                     },
                     "keyUrl": "[reference('CreateKeyVaultKey').outputs.keyVaultKeyUrl]"
                 }
@@ -266,15 +136,15 @@
         {
             "type": "Microsoft.KeyVault/vaults/accessPolicies",
             "apiVersion": "2019-09-01",
-            "name": "[concat('primaryDesKvName6', '/add')]",
+            "name": "[concat(parameters('primaryDeskv'), '/add')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Compute/diskEncryptionSets', 'primaryDiskEncryptionSetName2')]"
+                "[resourceId('Microsoft.Compute/diskEncryptionSets', parameters('primarayDesName'))]"
             ],
             "properties": {
                 "accessPolicies": [
                     {
                         "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
-                        "objectId": "[reference(resourceId('Microsoft.Compute/diskEncryptionSets', 'primaryDiskEncryptionSetName2'), '2020-06-30', 'full').identity.principalId]",
+                        "objectId": "[reference(resourceId('Microsoft.Compute/diskEncryptionSets', parameters('primarayDesName')), '2020-06-30', 'full').identity.principalId]",
                         "permissions": {
                             "keys": [
                                 "Get",
