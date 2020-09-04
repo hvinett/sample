@@ -1,18 +1,18 @@
 param (
-     [string] $primaryKeyVaultName,
-     [string] $primaryKeyName,
-     [string] $replicaKeyVaultName,
-     [string] $replicaKeyName,
-     [string] $backupKeyVaultName,
-     [string] $backupKeyName
+     [string] $primaryInstanceKeyVaultName,
+     [string] $primaryInstanceKeyName,
+     [string] $replicaInstanceKeyVaultName,
+     [string] $replicaInstanceKeyName,
+     [string] $backupInstanceKeyVaultName,
+     [string] $backupInstanceKeyName
 )
                   
 
-$primaryKey = Add-AzKeyVaultKey -VaultName $primaryKeyVaultName  -name $primaryKeyName -Destination 'Software'
-$replicaKey = Add-AzKeyVaultKey -VaultName $replicaKeyVaultName  -name $replicaKeyName -Destination 'Software'
-$backupKey = Add-AzKeyVaultKey -VaultName $backupKeyVaultName  -name $backupKeyName -Destination 'Software'
+$primaryInstanceDesKey = Add-AzKeyVaultKey -VaultName $primaryInstanceKeyVaultName  -name $primaryInstanceKeyName -Destination 'Software'
+$replicaInstanceDesKey = Add-AzKeyVaultKey -VaultName $replicaInstanceKeyVaultName  -name $replicaInstanceKeyName -Destination 'Software'
+$backupInstanceDesKey = Add-AzKeyVaultKey -VaultName $backupInstanceKeyVaultName  -name $backupInstanceKeyName -Destination 'Software'
 
 $DeploymentScriptOutputs = @{}
-$DeploymentScriptOutputs['primaryKeyVaultKeyUrl'] = $primaryKey.Id
-$DeploymentScriptOutputs['replicaKeyVaultKeyUrl'] = $replicaKey.Id
-$DeploymentScriptOutputs['backupKeyVaultKeyUrl'] = $backupKey.Id
+$DeploymentScriptOutputs['primaryInstanceDesKeyVaultKeyUrl'] = $primaryInstanceDesKey.Id
+$DeploymentScriptOutputs['replicaInstanceDesKeyVaultKeyUrl'] = $replicaInstanceDesKey.Id
+$DeploymentScriptOutputs['backupInstanceDesKeyVaultKeyUrl'] = $backupInstanceDesKey.Id
