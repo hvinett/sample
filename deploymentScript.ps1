@@ -6,7 +6,12 @@ param (
      [string] $backupInstanceKeyVaultName,
      [string] $backupInstanceKeyName
 )
-                  
+Write-Output $primaryInstanceKeyVaultName             
+Write-Output $primaryInstanceKeyName      
+Write-Output $replicaInstanceKeyVaultName      
+Write-Output $replicaInstanceKeyName      
+Write-Output $backupInstanceKeyVaultName      
+Write-Output $backupInstanceKeyName      
 
 $primaryInstanceDesKey = Add-AzKeyVaultKey -VaultName $primaryInstanceKeyVaultName  -name $primaryInstanceKeyName -Destination 'Software'
 $replicaInstanceDesKey = Add-AzKeyVaultKey -VaultName $replicaInstanceKeyVaultName  -name $replicaInstanceKeyName -Destination 'Software'
