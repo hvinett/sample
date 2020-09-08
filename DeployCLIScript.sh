@@ -75,4 +75,4 @@ fi
 
 
 
-echo "Result: [ {'primaryInstanceDesKeyUrl': $primaryInstanceDesKeyUrl}, {'replicaInstanceDesKeyUrl': $replicaInstanceDesKeyUrl}, {'backupInstanceDesKeyUrl': $backupInstanceDesKeyUrl}]" > $AZ_SCRIPTS_OUTPUT_PATH
+echo "\"Result\": [ {\"primaryInstanceDesKeyUrl\": \"$primaryInstanceDesKeyUrl\"}, {\"replicaInstanceDesKeyUrl\": \"$replicaInstanceDesKeyUrl\"}, {\"backupInstanceDesKeyUrl\": \"$backupInstanceDesKeyUrl\"}]" > $AZ_SCRIPTS_OUTPUT_PATH
