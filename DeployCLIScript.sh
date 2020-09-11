@@ -50,7 +50,7 @@ done
 
 primaryInstanceDesKeyUrl=$(az keyvault key show --vault-name "primaryInstanceKeyVaultName"  --name "primaryInstanceKeyName" --query key.kid)
 exitCode=$?
-if [ $exitCode -ne 0]
+if [ $exitCode -ne 0 ]
 then
 	az keyvault key create --vault-name "primaryInstanceKeyVaultName"  --name "primaryInstanceKeyName"
 	primaryInstanceDesKeyUrl=$(az keyvault key show --vault-name "primaryInstanceKeyVaultName"  --name "primaryInstanceKeyName" --query key.kid)
@@ -58,7 +58,7 @@ fi
 
 replicaInstanceDesKeyUrl=$(az keyvault key show --vault-name "replicaInstanceKeyVaultName"  --name "replicaInstanceKeyName" --query key.kid)
 exitCode=$?
-if [ $exitCode -ne 0]
+if [ $exitCode -ne 0 ]
 then
 	az keyvault key create --vault-name "replicaInstanceKeyVaultName"  --name "replicaInstanceKeyName"
 	replicaInstanceDesKeyUrl=$(az keyvault key show --vault-name "replicaInstanceKeyVaultName"  --name "replicaInstanceKeyName" --query key.kid)
@@ -67,7 +67,7 @@ fi
 
 backupInstanceDesKeyUrl=$(az keyvault key show --vault-name "backupInstanceKeyVaultName"  --name "backupInstanceKeyName" --query key.kid)
 exitCode=$?
-if [ $exitCode -ne 0]
+if [ $exitCode -ne 0 ]
 then
 	az keyvault key create --vault-name "backupInstanceKeyVaultName"  --name "backupInstanceKeyName"
 	backupInstanceDesKeyUrl=$(az keyvault key show --vault-name "backupInstanceKeyVaultName"  --name "backupInstanceKeyName" --query key.kid)
@@ -75,4 +75,4 @@ fi
 
 
 
-echo "\"Result\": [ {\"primaryInstanceDesKeyUrl\": \"$primaryInstanceDesKeyUrl\"}, {\"replicaInstanceDesKeyUrl\": \"$replicaInstanceDesKeyUrl\"}, {\"backupInstanceDesKeyUrl\": \"$backupInstanceDesKeyUrl\"}]" > $AZ_SCRIPTS_OUTPUT_PATH
+echo "{\"primaryInstanceDesKeyUrl\": \"$primaryInstanceDesKeyUrl\", \"replicaInstanceDesKeyUrl\": \"$replicaInstanceDesKeyUrl\", \"backupInstanceDesKeyUrl\": \"$backupInstanceDesKeyUrl}\"" > $AZ_SCRIPTS_OUTPUT_PATH
