@@ -1,3 +1,5 @@
+#!/bin/bash
+
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -48,31 +50,29 @@ done
 
 ## TODO: create disk encryption set keys if they are not present in their respective key vaults already. 
 
-primaryInstanceDesKeyUrl=$(az keyvault key show --vault-name "$primaryInstanceKeyVaultName"  --name "$primaryInstanceKeyName" --query key.kid)
+primaryInstanceDiskEncryptionSetKeyVaultKeyUrl=$(az keyvault key show --vault-name "$primaryInstanceKeyVaultName"  --name "$primaryInstanceKeyName" --query key.kid)
 exitCode=$?
 if [ $exitCode -ne 0 ]
 then
 	az keyvault key create --vault-name $primaryInstanceKeyVaultName  --name $primaryInstanceKeyName
-	primaryInstanceDesKeyUrl=$(az keyvault key show --vault-name "$primaryInstanceKeyVaultName"  --name "$primaryInstanceKeyName" --query key.kid)
+	primaryInstanceDiskEncryptionSetKeyVaultKeyUrl=$(az keyvault key show --vault-name "$primaryInstanceKeyVaultName"  --name "$primaryInstanceKeyName" --query key.kid)
 fi
 
-replicaInstanceDesKeyUrl=$(az keyvault key show --vault-name "$replicaInstanceKeyVaultName"  --name "$replicaInstanceKeyName" --query key.kid)
+replicaInstanceDiskEncryptionSetKeyVaultKeyUrl=$(az keyvault key show --vault-name "$replicaInstanceKeyVaultName"  --name "$replicaInstanceKeyName" --query key.kid)
 exitCode=$?
 if [ $exitCode -ne 0 ]
 then
 	az keyvault key create --vault-name $replicaInstanceKeyVaultName  --name $replicaInstanceKeyName
-	replicaInstanceDesKeyUrl=$(az keyvault key show --vault-name $replicaInstanceKeyVaultName  --name $replicaInstanceKeyName --query key.kid)
+	replicaInstanceDiskEncryptionSetKeyVaultKeyUrl=$(az keyvault key show --vault-name $replicaInstanceKeyVaultName  --name $replicaInstanceKeyName --query key.kid)
 fi
 
 
-backupInstanceDesKeyUrl=$(az keyvault key show --vault-name $backupInstanceKeyVaultName  --name $backupInstanceKeyName --query key.kid)
+backupInstanceDiskEncryptionSetKeyVaultKeyUrl=$(az keyvault key show --vault-name $backupInstanceKeyVaultName  --name $backupInstanceKeyName --query key.kid)
 exitCode=$?
 if [ $exitCode -ne 0 ]
 then
 	az keyvault key create --vault-name $backupInstanceKeyVaultName  --name $backupInstanceKeyName
-	backupInstanceDesKeyUrl=$(az keyvault key show --vault-name $backupInstanceKeyVaultName  --name $backupInstanceKeyName --query key.kid)
+	backupInstanceDiskEncryptionSetKeyVaultKeyUrl=$(az keyvault key show --vault-name $backupInstanceKeyVaultName  --name $backupInstanceKeyName --query key.kid)
 fi
 
-
-
-echo "{\"primaryInstanceDesKeyUrl\": $primaryInstanceDesKeyUrl, \"replicaInstanceDesKeyUrl\": $replicaInstanceDesKeyUrl, \"backupInstanceDesKeyUrl\": $backupInstanceDesKeyUrl}" > $AZ_SCRIPTS_OUTPUT_PATH
+echo "{\"primaryInstanceDiskEncryptionSetKeyVaultKeyUrl\": $primaryInstanceDiskEncryptionSetKeyVaultKeyUrl, \"replicaInstanceDiskEncryptionSetKeyVaultKeyUrl\": $replicaInstanceDiskEncryptionSetKeyVaultKeyUrl, \"backupInstanceDiskEncryptionSetKeyVaultKeyUrl\": $backupInstanceDiskEncryptionSetKeyVaultKeyUrl}" > $AZ_SCRIPTS_OUTPUT_PATH
